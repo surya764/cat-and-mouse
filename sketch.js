@@ -1,42 +1,61 @@
-var garden,gardenImage;
-var tom_running;tom_collision,tom_one;
-var jerry_waving,jerry_one,jerry_collision;
+var canvas,bg;
+var together;
+var tom, tomImg1,tomImg2;
+var jerry, jerryImg1,jerryImg2;
 
 function preload() {
-    //load the images here
+    bg = loadImage("images/garden.png");
+    tomImg1= loadAnimation("images/tomOne.png");
+    tomImg2=loadAnimation("images/tomTwo.png","images/tomThree.png");
+    tomImg3= loadAnimation("images/tomFour.png");
+    jerryImg1=loadAnimation("images/jerryOne.png");
+    jerryImg2= loadAnimation("images/jerryTwo.png","images/jerryThree.png");
+    jerryImg3=loadAnimation("images/jerryFour.png");
 
-    tom_running = loadAnimation("tomTwo.png","tomThree.png");
-    tom_collision= loadAnimation("tomFour.png");
-    tom_one     = loadAnimation("tomOne.png");
-
-    jerry_waving= loadAnimation("jerryTwo.png","jerryThree.png");
-    jerry_collision= loadAnimation("jerryFour.png");
-    jerry_one   = loadAnimation("jerryOne.png");
-
-    gardenImage = loadAnimation("garden.png");
 }
 
 function setup(){
-    createCanvas(1000,800);
-    //create tom and jerry sprites here
+    canvas = createCanvas(1000,800);
 
-    tom = createSprite(600,400,50,50);
-    tom.addAnimation("tomOne",tom_one);
+    tom = createSprite(870, 600);
+    tom.addAnimation("tomSleeping", tomImg1);
+    tom.scale = 0.2;
 
-    jerry = createSprite(200,400,50,50);
-    jerry.addAnimation("jerryOne",jerry_one);
+    jerry = createSprite(200, 600);
+    jerry.addAnimation("jerryStanding", jerryImg1);
+    jerry.scale = 0.15;
 
-    garden = createSprite(900,700,0,0);
-    garden.addAnimation("garden",gardenImage);
 }
 
 function draw() {
 
-    background(255);
-    //Write condition here to evalute if tom and jerry collide
+    background(bg);
+
+    if(tom.x - jerry.x < (tom.width - jerry.width)/2)
+    { 
+        tom.velocityX=0;
+        tom.addAnimation("tomLastImage", tomImg3);
+        tom.x =300;
+        tom.scale=0.2;
+        tom.changeAnimation("tomLastImage");
+        jerry.addAnimation("jerryLastImage", jerryImg3);
+        jerry.scale=0.15;
+        jerry.changeAnimation("jerryLastImage");
+    }  
 
     drawSprites();
+}
+
 
 function keyPressed(){
-    
+
+    if(keyCode === LEFT_ARROW){
+        tom.velocityX = -5; 
+        tom.addAnimation("tomRunning", tomImg2);
+        tom.changeAnimation("tomRunning");
+        
+        jerry.addAnimation("jerryTeasing", jerryImg2);
+        jerry.frameDelay = 25;
+        jerry.changeAnimation("jerryTeasing");
+    }
 }
